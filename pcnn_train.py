@@ -24,9 +24,16 @@ def train_or_test(model, data_loader, optimizer, loss_op, device, args, epoch, m
     loss_tracker = mean_tracker()
     
     for batch_idx, item in enumerate(tqdm(data_loader)):
-        model_input, _ = item
+        model_input, classes = item
         model_input = model_input.to(device)
-        model_output = model(model_input)
+        # print(classes)
+
+        label_to_int = {'Class0': 0, 'Class1': 1, 'Class2': 2, 'Class3': 3}
+        int_classes = [label_to_int[label] for label in classes]
+        int_classes = torch.tensor(int_classes, device=device)
+
+
+        model_output = model(model_input, class_labels=int_classes)
         loss = loss_op(model_input, model_output)
         loss_tracker.update(loss.item()/deno)
         if mode == 'training':
@@ -78,7 +85,7 @@ if __name__ == '__main__':
                         help='Learning rate decay, applied every step of the optimization')
     parser.add_argument('-b', '--batch_size', type=int, default=64,
                         help='Batch size during training per GPU')
-    parser.add_argument('-sb', '--sample_batch_size', type=int, default=32,
+    parser.add_argument('-sb', '--sample_batch_size', type=int, default=16,
                         help='Batch size during sampling per GPU')
     parser.add_argument('-x', '--max_epochs', type=int,
                         default=5000, help='How many epochs to run in total?')
@@ -96,10 +103,10 @@ if __name__ == '__main__':
     model_name = 'pcnn_' + args.dataset + "_"
     model_path = args.save_dir + '/'
     if args.load_params is not None:
-        model_name = model_name + 'load_model'
+        model_name = model_name + 'load_model_conditional_3'
         model_path = model_path + model_name + '/'
     else:
-        model_name = model_name + 'from_scratch'
+        model_name = model_name + 'from_scratch_conditional_5'
         model_path = model_path + model_name + '/'
     
     job_name = "PCNN_Training_" + "dataset:" + args.dataset + "_" + args.tag
@@ -185,8 +192,12 @@ if __name__ == '__main__':
     model = model.to(device)
 
     if args.load_params:
-        model.load_state_dict(torch.load(args.load_params))
-        print('model parameters loaded')
+        model_path = os.path.join(os.path.dirname(__file__), args.load_params)
+        if os.path.exists(model_path):
+            model.load_state_dict(torch.load(model_path))
+            print('model parameters loaded')
+        else:
+            raise FileNotFoundError(f"Model file not found at {model_path}")
 
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
     scheduler = lr_scheduler.StepLR(optimizer, step_size=1, gamma=args.lr_decay)
@@ -203,14 +214,14 @@ if __name__ == '__main__':
         
         # decrease learning rate
         scheduler.step()
-        train_or_test(model = model,
-                      data_loader = test_loader,
-                      optimizer = optimizer,
-                      loss_op = loss_op,
-                      device = device,
-                      args = args,
-                      epoch = epoch,
-                      mode = 'test')
+        # train_or_test(model = model,
+        #               data_loader = test_loader,
+        #               optimizer = optimizer,
+        #               loss_op = loss_op,
+        #               device = device,
+        #               args = args,
+        #               epoch = epoch,
+        #               mode = 'test')
         
         train_or_test(model = model,
                       data_loader = val_loader,
@@ -221,9 +232,15 @@ if __name__ == '__main__':
                       epoch = epoch,
                       mode = 'val')
         
-        if epoch % args.sampling_interval == 0:
+        if (epoch + 1) % args.sampling_interval == 0:
             print('......sampling......')
-            sample_t = sample(model, args.sample_batch_size, args.obs, sample_op)
+
+
+            sample_labels = torch.tensor([0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3], device=device)
+            # sample_labels = torch.randint(0, 4, (args.sample_batch_size,), dtype=torch.long).to(device)
+
+
+            sample_t = sample(model, args.sample_batch_size, args.obs, sample_op, class_labels=sample_labels)
             sample_t = rescaling_inv(sample_t)
             save_images(sample_t, args.sample_dir)
             sample_result = wandb.Image(sample_t, caption="epoch {}".format(epoch))

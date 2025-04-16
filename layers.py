@@ -116,7 +116,7 @@ skip connection parameter : 0 = no skip connection
                             2 = skip connection where skip input size === 2 * input size
 '''
 class gated_resnet(nn.Module):
-    def __init__(self, num_filters, conv_op, nonlinearity=concat_elu, skip_connection=0):
+    def __init__(self, num_filters, conv_op, nonlinearity=concat_elu, skip_connection=0, embedding_dim=None):
         super(gated_resnet, self).__init__()
         self.skip_connection = skip_connection
         self.nonlinearity = nonlinearity
@@ -125,14 +125,33 @@ class gated_resnet(nn.Module):
         if skip_connection != 0 :
             self.nin_skip = nin(2 * skip_connection * num_filters, num_filters)
 
+        # small mlp to learn film from class embeddings 
+        if embedding_dim != None:
+            self.film = nn.Sequential(
+                nn.Linear(embedding_dim, 2*num_filters),
+                nn.Tanh(),
+                nn.Linear(2*num_filters, 2*num_filters)
+            )
+            nn.init.normal_(self.film[-1].weight, std=0.02) 
+            nn.init.zeros_(self.film[-1].bias) 
+        else:
+            raise ValueError("No embedding dim in resnet")  
+
         self.dropout = nn.Dropout2d(0.5)
         self.conv_out = conv_op(2 * num_filters, 2 * num_filters)
 
 
-    def forward(self, og_x, a=None):
+    def forward(self, og_x, a=None, class_embedding=None):
         x = self.conv_input(self.nonlinearity(og_x))
         if a is not None :
             x += self.nin_skip(self.nonlinearity(a))
+
+        if class_embedding != None:
+            film = self.film(class_embedding)
+            scale, shift = torch.chunk(film, 2, dim=1) # arbitrary split, but it will learn the differences
+            x = x * scale[:,:, None, None] + shift[:,:,None,None] # do film on x
+
+
         x = self.nonlinearity(x)
         x = self.dropout(x)
         x = self.conv_out(x)

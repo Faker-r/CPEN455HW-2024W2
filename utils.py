@@ -33,7 +33,7 @@ def log_prob_from_logits(x):
     return x - m - torch.log(torch.sum(torch.exp(x - m), dim=axis, keepdim=True))
 
 
-def discretized_mix_logistic_loss(x, l):
+def discretized_mix_logistic_loss(x, l, batched=False):
     """ log-likelihood for mixture of discretized logistics, assumes the data has been rescaled to [-1,1] interval """
     # Pytorch ordering
     x = x.permute(0, 2, 3, 1)
@@ -41,6 +41,7 @@ def discretized_mix_logistic_loss(x, l):
     xs = [int(y) for y in x.size()]
     ls = [int(y) for y in l.size()]
    
+
     # here and below: unpacking the params of the mixture of logistics
     nr_mix = int(ls[-1] / 10) 
     logit_probs = l[:, :, :, :nr_mix]
@@ -98,7 +99,12 @@ def discretized_mix_logistic_loss(x, l):
     log_probs        = cond * log_cdf_plus + (1. - cond) * inner_out
     log_probs        = torch.sum(log_probs, dim=3) + log_prob_from_logits(logit_probs)
     
-    return -torch.sum(log_sum_exp(log_probs))
+
+    if not batched:
+        return -torch.sum(log_sum_exp(log_probs))
+    else:
+        return -torch.sum(log_sum_exp(log_probs), dim=(1, 2))   # → shape [B]
+
 
 
 def to_one_hot(tensor, n, fill_with=1.):
@@ -174,7 +180,7 @@ def right_shift(x, pad=None):
     return pad(x)
 
 
-def sample(model, sample_batch_size, obs, sample_op):
+def sample(model, sample_batch_size, obs, sample_op, class_labels=None):
     model.train(False)
     with torch.no_grad():
         data = torch.zeros(sample_batch_size, obs[0], obs[1], obs[2])
@@ -182,7 +188,7 @@ def sample(model, sample_batch_size, obs, sample_op):
         for i in range(obs[1]):
             for j in range(obs[2]):
                 data_v = data
-                out   = model(data_v, sample=True)
+                out   = model(data_v, sample=True, class_labels=class_labels)
                 out_sample = sample_op(out)
                 data[:, :, i, j] = out_sample.data[:, :, i, j]
     return data

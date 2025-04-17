@@ -128,9 +128,7 @@ class gated_resnet(nn.Module):
         # small mlp to learn film from class embeddings 
         if embedding_dim != None:
             self.film = nn.Sequential(
-                nn.Linear(embedding_dim, 2*num_filters),
-                nn.Tanh(),
-                nn.Linear(2*num_filters, 2*num_filters)
+                nn.Linear(embedding_dim, 2*num_filters)
             )
             nn.init.normal_(self.film[-1].weight, std=0.02) 
             nn.init.zeros_(self.film[-1].bias) 

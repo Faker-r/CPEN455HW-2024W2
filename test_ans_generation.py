@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
     #TODO:Begin of your code
     #You should replace the random classifier with your trained model
-    model = PixelCNN(nr_resnet=4, nr_filters=96, nr_logistic_mix=10,
+    model = PixelCNN(nr_resnet=5, nr_filters=128, nr_logistic_mix=10,
                     resnet_nonlinearity='concat_elu', input_channels=3)
     #End of your code
     

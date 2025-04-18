@@ -1,4 +1,4 @@
-tenth run: on kaggle 
+tenth run: on kaggle P100
 
 much higher specs, since kaggle has more memory.
 python pcnn_train.py --batch_size 32 --sample_batch_size 16 --sampling_interval 25 --save_interval 25 --dataset cpen455 --nr_resnet 5 --nr_filters 128 --nr_logistic_mix 10 --lr_decay 0.99998 --lr 0.0005 --max_epochs 300 --en_wandb True

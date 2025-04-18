@@ -57,7 +57,7 @@ if __name__ == "__main__":
     # model = model.eval()
 
 
-    model = PixelCNN(nr_resnet=5, nr_filters=128, nr_logistic_mix=10,
+    model = PixelCNN(nr_resnet=5, nr_filters=108, nr_logistic_mix=10,
                     resnet_nonlinearity='concat_elu', input_channels=3)
     model = model.to(device)
     model_path = os.path.join(os.path.dirname(__file__), 'models/conditional_pixelcnn.pth')

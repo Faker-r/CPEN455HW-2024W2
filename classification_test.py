@@ -94,15 +94,20 @@ if __name__ == '__main__':
     model = model.to(device)
     #Attention: the path of the model is fixed to './models/conditional_pixelcnn.pth'
     #You should save your model to this path
-    model_path = os.path.join(os.path.dirname(__file__), 'models/1_129.pth')
-    if os.path.exists(model_path):
-        model.load_state_dict(torch.load(model_path))
-        print('model parameters loaded')
-    else:
-        raise FileNotFoundError(f"Model file not found at {model_path}")
-    model.eval()
-    
-    acc = classifier(model = model, data_loader = dataloader, device = device)
-    print(f"Accuracy: {acc}")
+
+
+    for i in range(0,30):
+        epoch = 9 + i * 10
+        path = 'models/kaggle_1_' + str(epoch) + '.pth'
+        model_path = os.path.join(os.path.dirname(__file__), path)
+        if os.path.exists(model_path):
+            model.load_state_dict(torch.load(model_path))
+            print('model parameters loaded')
+        else:
+            raise FileNotFoundError(f"Model file not found at {model_path}")
+        model.eval()
         
-        
+        acc = classifier(model = model, data_loader = dataloader, device = device)
+        print(f"Epoch: {epoch}, Accuracy: {acc}")
+            
+            

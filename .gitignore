@@ -2,12 +2,12 @@
 .idea/
 wandb
 *log
-models
+# models
+models_og
 data/MNIST
 data/Imagenet*
 samples/*.jpg
-samples/*.png
-
+samples/*
 # Created by https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,visualstudiocode,python
 

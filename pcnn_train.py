@@ -103,10 +103,10 @@ if __name__ == '__main__':
     model_name = 'pcnn_' + args.dataset + "_"
     model_path = args.save_dir + '/'
     if args.load_params is not None:
-        model_name = model_name + 'load_model_conditional_6'
+        model_name = model_name + 'load_model_kaggle_1_249_cont'
         model_path = model_path + model_name + '/'
     else:
-        model_name = model_name + 'from_scratch_conditional_6'
+        model_name = model_name + 'from_scratch_conditional_7'
         model_path = model_path + model_name + '/'
     
     job_name = "PCNN_Training_" + "dataset:" + args.dataset + "_" + args.tag

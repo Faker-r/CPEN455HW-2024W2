@@ -1,12 +1,136 @@
+kaggle 2:
+
+higher filters, higher logistic mix, lower resnets cuz qi yan used 1 resnet and somehow made it works
+
+Epoch: 9, Accuracy: 0.4258188824662813
+Epoch: 19, Accuracy: 0.51252408477842
+Epoch: 29, Accuracy: 0.5317919075144508
+Epoch: 39, Accuracy: 0.5780346820809249
+Submission successful! Accuracy: 55.21%, F1: 54.57%
+Epoch: 49, Accuracy: 0.3217726396917148
+Epoch: 59, Accuracy: 0.6223506743737958
+Submission successful! Accuracy: 61.00%, F1: 53.94%
+Epoch: 69, Accuracy: 0.5452793834296724
+Epoch: 79, Accuracy: 0.5452793834296724
+Epoch: 89, Accuracy: 0.45664739884393063
+Epoch: 99, Accuracy: 0.4026974951830443
+Epoch: 109, Accuracy: 0.5202312138728323
+Epoch: 119, Accuracy: 0.5067437379576107
+Epoch: 129, Accuracy: 0.5915221579961464
+Submission successful! Accuracy: 60.81%, F1: 53.40%
+Epoch: 139, Accuracy: 0.51252408477842
+Epoch: 149, Accuracy: 0.5414258188824663
+Epoch: 159, Accuracy: 0.5144508670520231
+Epoch: 169, Accuracy: 0.4816955684007707
+Epoch: 179, Accuracy: 0.5433526011560693
+Epoch: 189, Accuracy: 0.5703275529865125
+Submission successful! Accuracy: 54.44%, F1: 46.03%
+Epoch: 199, Accuracy: 0.48554913294797686
+Epoch: 209, Accuracy: 0.31021194605009633
+Epoch: 219, Accuracy: 0.35645472061657035
+Epoch: 229, Accuracy: 0.4720616570327553
+Epoch: 239, Accuracy: 0.5857418111753372
+Submission successful! Accuracy: 59.85%, F1: 54.74%
+Epoch: 249, Accuracy: 0.41040462427745666
+Epoch: 259, Accuracy: 0.630057803468208
+Submission successful! Accuracy: 62.36%, F1: 59.33%
+Epoch: 269, Accuracy: 0.4142581888246628
+Epoch: 279, Accuracy: 0.48940269749518306
+Epoch: 289, Accuracy: 0.44508670520231214
+Epoch: 299, Accuracy: 0.5433526011560693
+
+
+
+'batch_size': 32,
+93.9s	149	 'data_dir': 'data',
+93.9s	150	 'dataset': 'cpen455',
+93.9s	151	 'en_wandb': True,
+93.9s	152	 'load_params': None,
+93.9s	153	 'lr': 0.0002,
+93.9s	154	 'lr_decay': 0.99999,
+93.9s	155	 'max_epochs': 300,
+93.9s	156	 'nr_filters': 140,
+93.9s	157	 'nr_logistic_mix': 16,
+93.9s	158	 'nr_resnet': 3,
+93.9s	159	 'obs': (3, 32, 32),
+93.9s	160	 'sample_batch_size': 16,
+93.9s	161	 'sample_dir': 'samples',
+93.9s	162	 'sampling_interval': 10,
+93.9s	163	 'save_dir': 'models',
+93.9s	164	 'save_interval': 10,
+93.9s	165	 'seed': 1,
+93.9s	166	 'tag': 'default'
+
+eleventh run:
+
+lower learning rate
+lr 0.00025
+python pcnn_train.py --batch_size 24 --sample_batch_size 16 --sampling_interval 25 --save_interval 25 --dataset cpen455 --nr_resnet 4 --nr_filters 72 --nr_logistic_mix 10 --lr_decay 0.999985 --lr 0.00025 --max_epochs 400 --en_wandb True
+
 tenth run: on kaggle P100
 
 much higher specs, since kaggle has more memory.
-python pcnn_train.py --batch_size 32 --sample_batch_size 16 --sampling_interval 25 --save_interval 25 --dataset cpen455 --nr_resnet 5 --nr_filters 128 --nr_logistic_mix 10 --lr_decay 0.99998 --lr 0.0005 --max_epochs 300 --en_wandb True
+
+kaggle_1_59: Accuracy: 0.5529865125240848, FID: 30.83
+kaggle_1_129: Accuracy: 0.6628131021194605 FID: 31.8   BEST AS OF NOW
+Submission successful! Accuracy: 59.46%, F1: 57.08%
+kaggle_1_179: Accuracy: 0.5105973025048169 FID: 32.83 
+
+Epoch: 209, Accuracy: 0.6705202312138728
+Submission successful! Accuracy: 67.57%, F1: 65.92%
+
+Epoch: 219, Accuracy: 0.5876685934489403
+Submission successful! Accuracy: 62.55%, F1: 56.14%
+Epoch: 229, Accuracy: 0.5780346820809249
+Submission successful! Accuracy: 59.07%, F1: 52.37%
+
+Epoch: 249, Accuracy: 0.74373795761079
+Submission successful! Accuracy: 72.20%, F1: 72.24%
+
+kaggle_1_219: Accuracy: 0.5876685934489403 FID: 32.23
+Submission successful! Accuracy: 62.55%, F1: 56.14%
+kaggle_1_259: FID: 33.12
+Accuracy: 0.551059730250481
+kaggle_1_279: FID: 37.23
+
+
+{'batch_size': 32,
+99.2s	150	 'data_dir': 'data',
+99.2s	151	 'dataset': 'cpen455',
+99.2s	152	 'en_wandb': True,
+99.2s	153	 'load_params': None,
+99.2s	154	 'lr': 0.0002,
+99.2s	155	 'lr_decay': 0.99998,
+99.2s	156	 'max_epochs': 300,
+99.2s	157	 'nr_filters': 108,
+99.2s	158	 'nr_logistic_mix': 10,
+99.2s	159	 'nr_resnet': 5,
+99.2s	160	 'obs': (3, 32, 32),
+99.2s	161	 'sample_batch_size': 16,
+99.2s	162	 'sample_dir': 'samples',
+99.2s	163	 'sampling_interval': 10,
+99.2s	164	 'save_dir': 'models',
+99.2s	165	 'save_interval': 10,
+99.2s	166	 'seed': 1,
+99.2s	167	 'tag': 'default'}
+
+
 
 ninth run: new one again
 more filters less other stuff
+Accuracy: 0.5472061657032755
+Average fid score: 35.380115835474896
+Submission successful! Accuracy: 53.67%, F1: 51.05%
 
 python pcnn_train.py --batch_size 24 --sample_batch_size 16 --sampling_interval 25 --save_interval 25 --dataset cpen455 --nr_resnet 3 --nr_filters 84 --nr_logistic_mix 10 --lr_decay 0.99995 --lr 0.0005 --max_epochs 200 --en_wandb True
+
+eighth part 2: 
+
+did another 200 epochs on the previous model.
+Accuracy: 0.4489402697495183
+Average fid score: 35.063511393589394
+Submission successful! Accuracy: 45.37%, F1: 31.60%
+
 
 eight run: new conditional model
 python pcnn_train.py --batch_size 26 --sample_batch_size 16 --sampling_interval 25 --save_interval 25 --dataset cpen455 --nr_resnet 4 --nr_filters 64 --nr_logistic_mix 10 --lr_decay 0.99995 --lr 0.0005 --max_epochs 200 --en_wandb True
@@ -1714,6 +1838,8 @@ FID: ~38
 
 
 Third run: conditional first time
+
+100 epochs 
 
 Accuracy: 0.27167630057803466
 Average fid score: 34.80098920866383

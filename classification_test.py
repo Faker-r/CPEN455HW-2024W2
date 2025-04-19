@@ -96,9 +96,9 @@ if __name__ == '__main__':
     #You should save your model to this path
 
 
-    for i in range(0,30):
+    for i in range(0,11):
         epoch = 9 + i * 10
-        path = 'models/kaggle_1_' + str(epoch) + '.pth'
+        path = 'models/kag_1_cont_' + str(epoch) + '.pth'
         model_path = os.path.join(os.path.dirname(__file__), path)
         if os.path.exists(model_path):
             model.load_state_dict(torch.load(model_path))
